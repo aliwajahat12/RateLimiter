@@ -2,7 +2,6 @@ package com.example.ratelimiter.middleware;
 
 import com.example.ratelimiter.Token.TokenBucket;
 import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,6 @@ public class Middleware implements Filter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setStatus(429); // 429 status code (Too Many Requests)
             httpResponse.getWriter().write("Too Many Requests");
-            return;
         }
     }
 
