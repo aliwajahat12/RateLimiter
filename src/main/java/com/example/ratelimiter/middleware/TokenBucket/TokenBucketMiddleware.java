@@ -1,4 +1,4 @@
-package com.example.ratelimiter.middleware;
+package com.example.ratelimiter.middleware.TokenBucket;
 
 import com.example.ratelimiter.Token.TokenBucket;
 import jakarta.servlet.*;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class Middleware implements Filter {
+public class TokenBucketMiddleware implements Filter {
     private final Map<String, TokenBucket> ipRequestCountMap = new ConcurrentHashMap<>();
 
     @Override
