@@ -1,4 +1,4 @@
-package com.example.ratelimiter.middleware.FixedWindow;
+package com.example.ratelimiter.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class FixedWindowCounterMiddleware implements Filter {
         Timestamp timestamp = new Timestamp(currentTimeMillis);
         timestamp.setNanos(0);
 
-        System.out.println("Current Time: " + timestamp);
+        System.out.println("FixedWindowCounterMiddleware: Current Time: " + timestamp);
 
         if (timestamp.equals(currentTimestamp)) {
             incrementCounter();

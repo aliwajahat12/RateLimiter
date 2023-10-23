@@ -1,6 +1,6 @@
 package com.example.ratelimiter.Token;
 
-import com.example.ratelimiter.middleware.TokenBucket.TokenBucketMiddleware;
+import com.example.ratelimiter.middleware.TokenBucketMiddleware;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

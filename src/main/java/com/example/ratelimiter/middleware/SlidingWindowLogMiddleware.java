@@ -1,4 +1,4 @@
-package com.example.ratelimiter.middleware.SlidingWindowLog;
+package com.example.ratelimiter.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class SlidingWindowCounterMiddleware implements Filter {
+public class SlidingWindowLogMiddleware implements Filter {
 
     private final Map<Timestamp, String> requestLog = new ConcurrentHashMap<>();
 
@@ -26,7 +26,7 @@ public class SlidingWindowCounterMiddleware implements Filter {
 
         String ipAddress = request.getRemoteAddr();
 
-        System.out.println("Current Time: " + timestamp + " IP Address: " + ipAddress);
+        System.out.println("SlidingWindowLogMiddleware: Current Time: " + timestamp + " IP Address: " + ipAddress);
 
         if (canRequest(timestamp)) {
             addRequestInLog(timestamp, ipAddress);

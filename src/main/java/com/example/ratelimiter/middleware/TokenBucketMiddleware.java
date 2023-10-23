@@ -1,4 +1,4 @@
-package com.example.ratelimiter.middleware.TokenBucket;
+package com.example.ratelimiter.middleware;
 
 import com.example.ratelimiter.Token.TokenBucket;
 import jakarta.servlet.*;
@@ -23,7 +23,7 @@ public class TokenBucketMiddleware implements Filter {
             ipRequestCountMap.put(ipAddress, bucket);
         }
 
-        System.out.println("Request IP address: " + ipAddress + " " + bucket.getTokensSize());
+        System.out.println("TokenBucketMiddleware: Request IP address: " + ipAddress + " " + bucket.getTokensSize());
 
         if (bucket.canRemoveToken()) {
             bucket = bucket.removeToken();
