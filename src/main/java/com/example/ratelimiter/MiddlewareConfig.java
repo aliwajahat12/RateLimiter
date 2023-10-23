@@ -14,11 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class MiddlewareConfig {
-    private final TokenBucketMiddleware tokenBucketMiddleware;
-    private final FixedWindowCounterMiddleware fixedWindowCounterMiddleware;
-    private final SlidingWindowLogMiddleware slidingWindowLogMiddleware;
-    private final SlidingWindowCounterMiddleware slidingWindowCounterMiddleware;
-
     @Value("${active.middleware}")
     private String activeMiddleware;
 
@@ -29,10 +24,10 @@ public class MiddlewareConfig {
         System.out.println("Middleware: " + activeMiddleware);
 
         switch (activeMiddleware) {
-            case "token" -> registrationBean.setFilter(tokenBucketMiddleware);
-            case "fixed" -> registrationBean.setFilter(fixedWindowCounterMiddleware);
-            case "log" -> registrationBean.setFilter(slidingWindowLogMiddleware);
-            case "sliding" -> registrationBean.setFilter(slidingWindowCounterMiddleware);
+            case "token" -> registrationBean.setFilter(new TokenBucketMiddleware());
+            case "fixed" -> registrationBean.setFilter(new FixedWindowCounterMiddleware());
+            case "log" -> registrationBean.setFilter(new SlidingWindowLogMiddleware());
+            case "sliding" -> registrationBean.setFilter(new SlidingWindowCounterMiddleware());
             default -> throw new IllegalArgumentException("Invalid active.middleware value: " + activeMiddleware);
         }
         registrationBean.addUrlPatterns("/limited");

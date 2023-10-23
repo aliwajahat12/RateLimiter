@@ -3,15 +3,13 @@ package com.example.ratelimiter.middleware;
 import com.example.ratelimiter.Token.TokenBucket;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
 public class TokenBucketMiddleware implements Filter {
-    private final Map<String, TokenBucket> ipRequestCountMap = new ConcurrentHashMap<>();
+    static final Map<String, TokenBucket> ipRequestCountMap = new ConcurrentHashMap<>();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -36,13 +34,13 @@ public class TokenBucketMiddleware implements Filter {
         }
     }
 
-    public void printRequestCounts() {
+    static public void printRequestCounts() {
         for (Map.Entry<String, TokenBucket> entry : ipRequestCountMap.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue().getTokensSize());
         }
     }
 
-    public void addNewTokens() {
+    static public void addNewTokens() {
         for (Map.Entry<String, TokenBucket> entry : ipRequestCountMap.entrySet()) {
             TokenBucket bucket = entry.getValue();
             bucket = bucket.addToken();

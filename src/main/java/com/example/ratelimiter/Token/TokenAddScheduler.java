@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TokenAddScheduler {
 
-    private final TokenBucketMiddleware tokenBucketMiddleware;
-
     @Scheduled(fixedRate = 1000) // Run every 1 second
     public void printRequestCounts() {
-        tokenBucketMiddleware.addNewTokens();
-//        middleware.printRequestCounts();
+        TokenBucketMiddleware.addNewTokens();
+//        TokenBucketMiddleware.printRequestCounts();
     }
 }

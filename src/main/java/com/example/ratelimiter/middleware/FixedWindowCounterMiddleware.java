@@ -2,12 +2,10 @@ package com.example.ratelimiter.middleware;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 
-@Component
 public class FixedWindowCounterMiddleware implements Filter {
 
     private Timestamp currentTimestamp;
