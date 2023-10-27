@@ -1,5 +1,6 @@
 package com.example.ratelimiter.middleware;
 
+import com.example.ratelimiter.Redis.RedisRepositoryImpl;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -8,14 +9,23 @@ import java.sql.Timestamp;
 
 public class SlidingWindowCounterMiddleware implements Filter {
 
+    private final RedisRepositoryImpl redisRepository;
+
     private Timestamp currentTimestamp;
     private int currentRequestsCount;
 
     public int requestThreshold = 60;
     private int previousTimestampCount = 0;
 
+
+    public SlidingWindowCounterMiddleware(RedisRepositoryImpl redisRepository) {
+        this.redisRepository = redisRepository;
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        redisRepository.incrementTotalRequestsCount();
 
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp timestamp = new Timestamp(currentTimeMillis);
@@ -23,18 +33,22 @@ public class SlidingWindowCounterMiddleware implements Filter {
 
         System.out.println("SlidingWindowCounterMiddleware: Current Time: " + timestamp);
 
-        if (timestamp.equals(currentTimestamp)) {
-            incrementCounter();
-            if (!isRequestInLimit()) {
+        if (redisRepository.isTimestampEqualToCurrent(timestamp)) {
+            redisRepository.incrementCounter();
+            if (!redisRepository.isRequestInLimit()) {
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 httpResponse.setStatus(429); // 429 status code (Too Many Requests)
                 httpResponse.getWriter().write("Too Many Requests");
                 return;
             }
         } else {
-            setNewTimeStamp(timestamp);
+            redisRepository.setNewTimeStamp(timestamp);
         }
         chain.doFilter(request, response);
+    }
+
+    private boolean isTimestampEqualToCurrent(Timestamp timestamp) {
+        return timestamp.equals(currentTimestamp);
     }
 
     void incrementCounter() {

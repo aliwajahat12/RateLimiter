@@ -1,5 +1,6 @@
 package com.example.ratelimiter;
 
+import com.example.ratelimiter.Redis.RedisRepositoryImpl;
 import com.example.ratelimiter.middleware.FixedWindowCounterMiddleware;
 import com.example.ratelimiter.middleware.SlidingWindowCounterMiddleware;
 import com.example.ratelimiter.middleware.SlidingWindowLogMiddleware;
@@ -17,6 +18,8 @@ public class MiddlewareConfig {
     @Value("${active.middleware}")
     private String activeMiddleware;
 
+    private final RedisRepositoryImpl redisRepository;
+
     @Bean
     public FilterRegistrationBean<Filter> Middleware() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
@@ -27,7 +30,7 @@ public class MiddlewareConfig {
             case "token" -> registrationBean.setFilter(new TokenBucketMiddleware());
             case "fixed" -> registrationBean.setFilter(new FixedWindowCounterMiddleware());
             case "log" -> registrationBean.setFilter(new SlidingWindowLogMiddleware());
-            case "sliding" -> registrationBean.setFilter(new SlidingWindowCounterMiddleware());
+            case "sliding" -> registrationBean.setFilter(new SlidingWindowCounterMiddleware(redisRepository));
             default -> throw new IllegalArgumentException("Invalid active.middleware value: " + activeMiddleware);
         }
         registrationBean.addUrlPatterns("/limited");
